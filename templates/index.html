@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #f0f2f5;
+        font-family: Vazirmatn, sans-serif;
+      }
+      .header {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: #fff;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+      }
+      .card {
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      }
+      .task-title {
+        font-weight: 600;
+      }
+      .status-completed {
+        color: #16a34a;
+        font-weight: 600;
+      }
+      .status-pending {
+        color: #ca8a04;
+        font-weight: 600;
+      }
+
+      /* کوچکتر کردن باکس توضیحات */
+      textarea.form-control-sm {
+        height: 50px;
+      }
+
+      /* بزرگتر کردن عرض فیلد ساعت در بخش اضافه کردن */
+      .add-task-time input[type="time"] {
+        width: 100%;
+        min-width: 100px;
+      }
+      /* Excel Sample Card */
+        .add-task-card {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Table Styling */
+        .add-task-card table {
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        }
+
+        .add-task-card thead {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: #fff;
+        }
+
+        .add-task-card thead th {
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-align: center;
+        border: none;
+        padding: 10px;
+        }
+
+        .add-task-card tbody td {
+        font-size: 0.85rem;
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px;
+        }
+
+        /* Zebra Rows */
+        .add-task-card tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+        }
+
+        /* Hover Effect */
+        .add-task-card tbody tr:hover {
+        background-color: #eef2ff;
+        transition: 0.2s;
+        }
+
+        /* Header Text */
+        .add-task-card h5 {
+        font-weight: 700;
+        color: #4f46e5;
+        }
+    </style>
+  </head>
+
+  <body class="container py-5">
+    <!-- Header -->
+    <div class="header text-center">
+      <h2 class="mb-1">📋 Task Manager</h2>
+      <p class="mb-0 opacity-75">مدیریت هوشمند وظایف، مرتب‌شده بر اساس زمان</p>
+    </div>
+
+    <!-- Add Task -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('add_task') }}" class="row g-3 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">عنوان</label>
+            <input type="text" name="title" class="form-control" required />
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">توضیحات</label>
+            <input type="text" name="description" class="form-control" />
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">وضعیت</label>
+            <select name="status" class="form-select">
+              <option value="Pending">در انتظار</option>
+              <option value="Completed">انجام شده</option>
+            </select>
+          </div>
+
+          <div class="col-md-1 add-task-time">
+            <label class="form-label">شروع</label>
+            <input type="time" name="start_time" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-1 add-task-time">
+            <label class="form-label">پایان</label>
+            <input type="time" name="end_time" class="form-control form-control-sm" />
+          </div>
+
+          <div class="col-md-1 d-flex align-items-end">
+            <button class="btn btn-primary w-100">
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <!-- Sample Excel Structure -->
+<div class="add-task-card mb-3">
+  <h5>نمونه ساختار فایل Excel برای Import</h5>
+  <p class="text-muted mb-2">ستون‌ها باید به ترتیب زیر باشند:</p>
+  <div class="table-responsive">
+    <table class="table table-bordered table-sm">
+      <thead class="table-light">
+        <tr>
+          <th>عنوان</th>
+          <th>توضیحات</th>
+          <th>وضعیت کار</th>
+          <th>زمان شروع</th>
+          <th>زمان پایان</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>جلسه با تیم</td>
+          <td>بررسی پروژه X</td>
+          <td>Pending</td>
+          <td>09:00</td>
+          <td>10:00</td>
+        </tr>
+        <tr>
+          <td>ارسال گزارش</td>
+          <td>گزارش هفتگی</td>
+          <td>Completed</td>
+          <td>11:00</td>
+          <td>11:30</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Import/Export -->
+    <div class="add-task-card mb-4">
+    <form method="POST" action="{{url_for('import_excel')}}" enctype="multipart/form-data" class="row g-2 align-items-end">
+        <div class="col-md-8">
+        <input type="file" name="excel" class="form-control form-control-sm" required />
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+        <button class="btn btn-outline-primary btn-sm w-100 d-flex align-items-center justify-content-center gap-1">
+            <i class="bi bi-upload"></i> Import
+        </button>
+        <a href="{{url_for("export_json")}}" class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center gap-1">
+            <i class="bi bi-download"></i> JSON
+        </a>
+        </div>
+    </form>
+    </div>
+
+
+    <!-- Task List -->
+    <div class="row g-3">
+      {% for task in tasks %}
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <form
+              method="POST"
+              action="{{ url_for('update_task', task_id=task.id) }}"
+            >
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <input
+                  name="title"
+                  value="{{ task.title }}"
+                  class="form-control form-control-sm task-title"
+                />
+
+                <a href="{{url_for("delete",task_id=task.id)}}" class="btn btn-sm btn-outline-danger ms-2">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+
+              <textarea
+                name="description"
+                class="form-control form-control-sm mb-2"
+                rows="2"
+              >{{ task.description }}</textarea>
+
+              <div class="row g-2 mb-2">
+                <div class="col">
+                  <label class="form-label small mb-1">شروع</label>
+                  <input type="time" name="start_time" value="{{ task.start_time }}" class="form-control form-control-sm" />
+                </div>
+                <div class="col">
+                  <label class="form-label small mb-1">پایان</label>
+                  <input type="time" name="end_time" value="{{ task.end_time }}" class="form-control form-control-sm" />
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center">
+                {% if task.status == 'Completed' %}
+                <span class="status-completed">✔ انجام شده</span>
+                {% else %}
+                <span class="status-pending">⏳ در انتظار</span>
+                {% endif %}
+
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-success order-2">
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div class="d-flex gap-2 mt-2">
+              <form method="POST" action="{{url_for("toggle_status",task_id=task.id)}}">
+                <button type="submit" class="btn btn-sm btn-outline-warning">
+                  <i class="bi bi-arrow-repeat"></i>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center text-muted py-5">
+        هنوز هیچ تسکی اضافه نشده 😴
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
